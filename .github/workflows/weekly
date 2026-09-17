@@ -1,0 +1,45 @@
+# ---------------------------------------------------------------------------
+# weekly-digest.yml — drafts the newsletter once a week.
+#
+# This reads data/jobs.json, which the daily workflow has already been keeping
+# up to date. It does no collecting of its own, so it is fast and it cannot
+# break your data.
+# ---------------------------------------------------------------------------
+
+name: Weekly digest
+
+on:
+  schedule:
+    # 07:00 UTC every Monday — after the daily collection has finished.
+    - cron: "0 7 * * 1"
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the digest
+        run: python scripts/digest.py
+
+      - name: Commit the draft
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add digests
+          if git diff --staged --quiet; then
+            echo "No new jobs this week — no digest written."
+          else
+            git commit -m "Weekly digest $(date -u +%Y-%m-%d)"
+            git push
+          fi
