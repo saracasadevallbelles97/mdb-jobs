@@ -1,0 +1,83 @@
+# ---------------------------------------------------------------------------
+# sources.yaml — the only file you edit to add or remove job boards.
+#
+# Keeping configuration separate from code is a habit worth forming early.
+# You can add ten organisations here without touching a line of Python, and
+# if you break something you can see exactly what changed in one small file.
+#
+# Each entry has:
+#   name     – a label for the log output, anything you like
+#   type     – must match a key in scripts/collectors/__init__.py
+#   enabled  – set false to switch a source off without deleting it
+#   config   – whatever that collector needs
+# ---------------------------------------------------------------------------
+
+sources:
+
+  # -------------------------------------------------------------------------
+  # START HERE. ReliefWeb aggregates postings from most UN agencies and many
+  # IFIs through one free public API. Get this working before anything else.
+  # -------------------------------------------------------------------------
+  - name: ReliefWeb (UN system and IFIs)
+    type: reliefweb
+    enabled: true
+    config:
+      # Identify your app politely. Use your repo URL once you have one.
+      appname: mdb-jobs-tracker
+
+      max_pages: 5        # 5 x 200 = up to 1000 postings per run
+      limit: 200
+
+      # Only keep postings from these organisations. Remove the list entirely
+      # to get everything ReliefWeb has (thousands, mostly NGOs).
+      #
+      # The names must match ReliefWeb's own source names exactly. To check,
+      # open https://reliefweb.int/jobs and look at the "Organization" filter.
+      organisations:
+        - World Bank
+        - International Monetary Fund (IMF)
+        - Asian Development Bank
+        - African Development Bank
+        - Inter-American Development Bank
+        - European Bank for Reconstruction and Development
+        - European Investment Bank
+        - International Finance Corporation
+        - UN Development Programme
+        - UN Children's Fund
+        - World Health Organization
+        - International Organization for Migration
+        - International Labour Organization
+        - Food and Agriculture Organization
+        - UN High Commissioner for Refugees
+        - World Food Programme
+        - UN Office for Project Services
+        - UN Women
+        - Organisation for Economic Co-operation and Development
+
+  # -------------------------------------------------------------------------
+  # ATS sources. These are DISABLED because slugs change and I could not
+  # verify them from here. Enable one at a time, after you have checked it.
+  #
+  # HOW TO VERIFY A SLUG (two minutes):
+  #   1. Find the organisation's careers page.
+  #   2. Look at the URL of a job listing. jobs.smartrecruiters.com/XYZ/123
+  #      means the slug is XYZ.
+  #   3. Test in your browser before enabling:
+  #      https://api.smartrecruiters.com/v1/companies/XYZ/postings?limit=5
+  #      If you see JSON, it works. If you see an error, the slug is wrong.
+  # -------------------------------------------------------------------------
+  - name: SmartRecruiters boards
+    type: smartrecruiters
+    enabled: false
+    config:
+      companies:
+        - slug: REPLACE_ME
+          organisation: European Investment Bank
+
+  - name: Greenhouse boards
+    type: greenhouse
+    enabled: false
+    config:
+      companies:
+        - slug: REPLACE_ME
+          organisation: Some Organisation

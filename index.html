@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Development bank and international organisation vacancies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Spectral:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --page:    #edf0ef;
+    --surface: #ffffff;
+    --stripe:  #f6f8f7;
+    --ink:     #1b2a2e;
+    --muted:   #5c6e70;
+    --rule:    #cfd8d6;
+    --accent:  #0f5f6b;
+    --soon:    #a56a00;
+    --now:     #9e2b25;
+
+    --serif: "Spectral", Georgia, serif;
+    --sans:  "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+    --head-h: 2.35rem;   /* height of the sticky column header row */
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent); }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 1.25rem; }
+
+  /* ---------- masthead ---------- */
+
+  header { padding: 2.5rem 0 1.25rem; }
+
+  h1 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 3.2vw, 2rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 0 0 .35rem;
+    max-width: 24ch;
+  }
+
+  .standfirst { color: var(--muted); margin: 0; max-width: 64ch; }
+
+  .status {
+    margin: 1.1rem 0 0;
+    padding-top: .9rem;
+    border-top: 2px solid var(--ink);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .4rem 1.25rem;
+    font-size: .88rem;
+  }
+
+  .status .n { font-weight: 600; }
+  .status .dim { color: var(--muted); }
+
+  /* ---------- jump to an organisation ---------- */
+
+  nav.index { margin: 1rem 0 1.75rem; font-size: .86rem; line-height: 1.9; }
+
+  nav.index a {
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 1px;
+    margin-right: .85rem;
+    white-space: nowrap;
+  }
+
+  nav.index a:hover { border-bottom-color: var(--accent); }
+  nav.index a .c { color: var(--muted); font-size: .92em; }
+
+  /* ---------- the table ---------- */
+
+  .sheet { background: var(--surface); border: 1px solid var(--rule); }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background: var(--ink);
+    color: #eef2f1;
+    font-size: .74rem;
+    font-weight: 600;
+    letter-spacing: .02em;
+    text-align: left;
+    padding: .6rem .7rem;
+    height: var(--head-h);
+    white-space: nowrap;
+  }
+
+  /* The organisation banner. Sticky lives on the cell, not the row — a
+     sticky <tr> is ignored by browsers. */
+  tr.group th {
+    position: sticky;
+    top: var(--head-h);
+    z-index: 2;
+    background: var(--page);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    text-align: left;
+    padding: .5rem .7rem;
+    font-family: var(--serif);
+    font-size: .98rem;
+    font-weight: 600;
+    scroll-margin-top: var(--head-h);
+  }
+
+  tr.group th .c { font-family: var(--sans); font-weight: 400; color: var(--muted); font-size: .8rem; margin-left: .5rem; }
+
+  tbody td {
+    padding: .5rem .7rem;
+    border-bottom: 1px solid #e8ecea;
+    vertical-align: top;
+    font-size: .89rem;
+  }
+
+  tbody tr.job:nth-child(even) td { background: var(--stripe); }
+
+  td.role { width: 44%; }
+
+  td.role a {
+    font-family: var(--serif);
+    font-size: 1rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  td.role a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  .new {
+    font-size: .68rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-left: .4rem;
+    vertical-align: .12em;
+  }
+
+  td.date, td.grade { white-space: nowrap; color: var(--muted); font-variant-numeric: tabular-nums; }
+  td.loc { color: var(--muted); }
+
+  td.closes { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  td.closes .left { font-weight: 600; }
+  td.closes.soon .left { color: var(--soon); }
+  td.closes.now  .left { color: var(--now); }
+  td.closes .none { color: var(--muted); }
+
+  /* ---------- states ---------- */
+
+  .state { background: var(--surface); border: 1px solid var(--rule); padding: 1.5rem; }
+  .state h2 { font-family: var(--serif); font-size: 1.1rem; margin: 0 0 .5rem; }
+  .state p { margin: 0 0 .6rem; color: var(--muted); max-width: 60ch; }
+  .state code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: .85em; background: var(--page); padding: .1rem .35rem;
+  }
+
+  footer {
+    margin-top: 2rem;
+    padding: 1.25rem 0 3rem;
+    border-top: 1px solid var(--rule);
+    color: var(--muted);
+    font-size: .84rem;
+    max-width: 64ch;
+  }
+
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ---------- narrow screens ----------
+     Rather than squeezing six columns onto a phone, drop the two least
+     useful ones. Role, location and closing date are what people scan for. */
+  @media (max-width: 760px) {
+    td.grade, th.grade, td.posted, th.posted { display: none; }
+    td.role { width: auto; }
+    .wrap { padding: 0 .85rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1>Vacancies in development banks and international organisations</h1>
+    <p class="standfirst">Collected every morning from each organisation's own
+    job feed. Listed by organisation, soonest closing date first.</p>
+
+    <p class="status" id="status"><span class="dim">Loading…</span></p>
+    <nav class="index" id="index" aria-label="Jump to an organisation"></nav>
+  </header>
+
+  <div id="output"></div>
+
+  <footer>
+    Dates come from each organisation's own feed and occasionally change after
+    publication. Check the original posting before you rely on a deadline.
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ------------------------------------------------------------------
+     This page does one job: load data.json (written by scripts/fetch.py)
+     and draw it as a table grouped by organisation.
+
+     There are no controls. Everything is on the page and you scroll.
+     The organisation links at the top are anchors — they jump, they do
+     not filter, so nothing ever disappears from view.
+  ------------------------------------------------------------------ */
+
+  var TODAY = new Date(); TODAY.setHours(0, 0, 0, 0);
+
+  function daysFromToday(iso) {
+    if (!iso) return null;
+    var d = new Date(iso + "T00:00:00");
+    if (isNaN(d)) return null;
+    return Math.round((d - TODAY) / 86400000);
+  }
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function slug(s) {
+    return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  }
+
+  function el(id) { return document.getElementById(id); }
+
+  /* Is this genuinely a recent arrival?
+
+     The obvious test is "first_seen is within 7 days", but that misfires on
+     the very first run, when EVERY posting is seen for the first time and the
+     whole list lights up as new. So we also require that the organisation
+     itself posted it recently, where it tells us. A vacancy we noticed today
+     but which was advertised three months ago is not news. */
+  function isRecentlyAdded(job) {
+    var seenAge = daysFromToday(job.first_seen);
+    if (seenAge === null || -seenAge > 7) return false;
+
+    var postedAge = daysFromToday(job.date_posted);
+    if (postedAge !== null && -postedAge > 14) return false;
+
+    return true;
+  }
+
+  /* ---------- one row ---------- */
+
+  function rowHtml(job) {
+    var left = daysFromToday(job.deadline);
+    var urgency = "";
+    var closes;
+
+    if (left === null) {
+      closes = '<span class="none">—</span>';
+    } else {
+      if (left <= 7) urgency = "now";
+      else if (left <= 21) urgency = "soon";
+      closes = esc(job.deadline) + '<br><span class="left">' +
+               left + (left === 1 ? " day left" : " days left") + "</span>";
+    }
+
+    var isNew = isRecentlyAdded(job);
+
+    var place = [job.city, job.country].filter(Boolean).join(", ") || "—";
+
+    return '<tr class="job">' +
+      '<td class="role"><a href="' + esc(job.url) + '" target="_blank" rel="noopener">' +
+        esc(job.title) + "</a>" + (isNew ? '<span class="new">New</span>' : "") + "</td>" +
+      '<td class="loc">' + esc(place) + "</td>" +
+      '<td class="grade">' + esc(job.grade || "—") + "</td>" +
+      '<td class="date posted">' + esc(job.date_posted || job.first_seen || "—") + "</td>" +
+      '<td class="closes ' + urgency + '">' + closes + "</td>" +
+    "</tr>";
+  }
+
+  /* ---------- the whole sheet ---------- */
+
+  function render(payload) {
+    var all = payload.jobs || [];
+
+    /* Hide postings whose deadline has already passed. They stay in
+       data/jobs.json, so nothing is lost — they are just not something
+       anyone can still apply to. */
+    var open = all.filter(function (j) {
+      var left = daysFromToday(j.deadline);
+      return left === null || left >= 0;
+    });
+    var closedCount = all.length - open.length;
+
+    /* Group by organisation. */
+    var groups = {};
+    open.forEach(function (j) {
+      var org = j.organisation || "Unattributed";
+      (groups[org] = groups[org] || []).push(j);
+    });
+
+    var orgNames = Object.keys(groups).sort(function (a, b) { return a.localeCompare(b); });
+
+    var newThisWeek = open.filter(isRecentlyAdded).length;
+
+    /* --- status line --- */
+    el("status").innerHTML =
+      '<span><span class="n">' + open.length + "</span> open vacancies</span>" +
+      '<span><span class="n">' + orgNames.length + "</span> organisations</span>" +
+      '<span><span class="n">' + newThisWeek + "</span> added in the last 7 days</span>" +
+      '<span class="dim">Updated ' + esc(payload.generated || "—") + "</span>" +
+      '<span class="dim"><a href="jobs.csv">Download as CSV</a></span>';
+
+    /* --- jump links --- */
+    el("index").innerHTML = orgNames.map(function (org) {
+      return '<a href="#org-' + slug(org) + '">' + esc(org) +
+             ' <span class="c">' + groups[org].length + "</span></a>";
+    }).join("");
+
+    /* --- table --- */
+    var body = orgNames.map(function (org) {
+      var rows = groups[org];
+
+      /* Soonest deadline first; postings with no deadline go last. */
+      rows.sort(function (a, b) {
+        var da = a.deadline || "9999-12-31", db = b.deadline || "9999-12-31";
+        if (da !== db) return da < db ? -1 : 1;
+        return (b.first_seen || "") < (a.first_seen || "") ? -1 : 1;
+      });
+
+      return '<tr class="group"><th colspan="5" id="org-' + slug(org) + '">' +
+               esc(org) + '<span class="c">' + rows.length +
+               (rows.length === 1 ? " vacancy" : " vacancies") + "</span></th></tr>" +
+             rows.map(rowHtml).join("");
+    }).join("");
+
+    el("output").innerHTML =
+      '<div class="sheet"><table>' +
+        "<thead><tr>" +
+          '<th scope="col">Role</th>' +
+          '<th scope="col">Location</th>' +
+          '<th scope="col" class="grade">Grade</th>' +
+          '<th scope="col" class="posted">Posted</th>' +
+          '<th scope="col">Closes</th>' +
+        "</tr></thead>" +
+        "<tbody>" + body + "</tbody>" +
+      "</table></div>";
+
+    if (closedCount) {
+      el("output").insertAdjacentHTML("beforeend",
+        '<p style="color:var(--muted);font-size:.84rem;margin:.8rem 0 0">' +
+        closedCount + " closed posting" + (closedCount === 1 ? "" : "s") +
+        " kept in the data file but not shown here.</p>");
+    }
+  }
+
+  /* ---------- load ---------- */
+
+  fetch("data.json", { cache: "no-store" })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(render)
+    .catch(function () {
+      el("status").textContent = "";
+      el("output").innerHTML =
+        '<div class="state"><h2>Could not load data.json</h2>' +
+        "<p>If you opened this file by double-clicking it, the browser blocks " +
+        "local files from loading other local files. Serve the folder instead — " +
+        "run this in the project folder:</p>" +
+        "<p><code>python -m http.server 8000 --directory docs</code></p>" +
+        "<p>then visit <code>http://localhost:8000</code>.</p>" +
+        "<p>If you are already on a web address, the file has not been generated " +
+        "yet — run <code>python scripts/fetch.py</code>.</p></div>";
+    });
+})();
+</script>
+</body>
+</html>
