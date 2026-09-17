@@ -38,17 +38,6 @@ Two automations, deliberately separate:
 They're separate files so they can fail independently. If the newsletter step
 breaks, the list still keeps updating.
 
-### Why "collect" and not "scrape"
-
-Scraping means reading the rendered web page — the same thing a human sees —
-and picking text out of the layout. It works until the site is redesigned, then
-it silently returns nothing.
-
-These organisations mostly don't require that. Their careers pages are built by
-fetching a data feed and drawing it, and that same feed is open to you. So the
-project reads the feed directly. It's cleaner, faster, gentler on their servers,
-and it doesn't break when someone changes a stylesheet.
-
 **ReliefWeb** (run by UN OCHA) is the big one: it already aggregates postings
 from most UN agencies and many development banks behind a single free API. That
 one source does most of the work on day one.
