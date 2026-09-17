@@ -1,25 +1,38 @@
 # ---------------------------------------------------------------------------
-# weekly-digest.yml — drafts the newsletter once a week.
+# daily.yml — runs every morning and refreshes the list.
 #
-# This reads data/jobs.json, which the daily workflow has already been keeping
-# up to date. It does no collecting of its own, so it is fast and it cannot
-# break your data.
+# GitHub Actions is a free computer that GitHub starts on a schedule, runs your
+# commands on, then throws away. This is the entire "automatic" part of the
+# project: no server to rent, nothing of yours that has to be switched on.
+#
+# This workflow only COLLECTS. The weekly newsletter is a separate file
+# (weekly-digest.yml) so that the two jobs can fail independently — if the
+# newsletter step breaks, your data still keeps updating.
 # ---------------------------------------------------------------------------
 
-name: Weekly digest
+name: Daily collection
 
 on:
   schedule:
-    # 07:00 UTC every Monday — after the daily collection has finished.
-    - cron: "0 7 * * 1"
+    # minute hour day-of-month month day-of-week — always UTC, never local time.
+    # 05:30 UTC daily. An odd number is deliberate: GitHub queues thousands of
+    # jobs on the hour, so off-peak minutes start sooner.
+    - cron: "30 5 * * *"
 
+  # Adds a "Run workflow" button in the Actions tab. This is how you test it
+  # without waiting until tomorrow. Do not remove it.
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: write        # needed to commit the refreshed data back
+
+# If yesterday's run somehow hasn't finished, don't start a second one on top.
+concurrency:
+  group: collection
+  cancel-in-progress: false
 
 jobs:
-  digest:
+  collect:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,18 +41,24 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: pip
 
-      - name: Build the digest
-        run: python scripts/digest.py
+      - run: pip install -r requirements.txt
 
-      - name: Commit the draft
+      - name: Collect jobs
+        run: python scripts/fetch.py
+
+      - name: Commit any changes
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add digests
+          git add data docs/data.json docs/jobs.csv
+          # `git diff --staged --quiet` succeeds when nothing changed. Without
+          # this guard the step fails on a quiet day, which would fill your
+          # inbox with false alarms and teach you to ignore real ones.
           if git diff --staged --quiet; then
-            echo "No new jobs this week — no digest written."
+            echo "Nothing new today."
           else
-            git commit -m "Weekly digest $(date -u +%Y-%m-%d)"
+            git commit -m "Daily update $(date -u +%Y-%m-%d)"
             git push
           fi
